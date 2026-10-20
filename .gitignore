@@ -2,3 +2,4 @@ chip8
 chip8.o
 main.o
 instructions.o
+decode_execute.o

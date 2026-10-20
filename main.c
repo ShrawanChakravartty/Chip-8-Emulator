@@ -7,11 +7,11 @@ int main(void){
     chip8_init(&chip8);
 
     chip8.memory[0x200] = 0x63;
-    chip8.memory[0x201] = 0xFA;
+    chip8.memory[0x201] = 0x81;
     chip8.memory[0x202] = 0x64;
-    chip8.memory[0x203] = 0x0A;
+    chip8.memory[0x203] = 0x07;
     chip8.memory[0x204] = 0x83;
-    chip8.memory[0x205] = 0x44;
+    chip8.memory[0x205] = 0x4E;
     
 
     {
@@ -74,7 +74,8 @@ int main(void){
     printf("PC = 0x%03X\n", (unsigned int)chip8.PC);
 
     printf("Value of Register V[3] = %u\n",chip8.V[0x3]);
-    
+    printf("Value of Register V[4] = %u\n",chip8.V[0x4]);
+    printf("Value of Register V[F] = %u\n",chip8.V[0xF]);
 
     return 0;
 }

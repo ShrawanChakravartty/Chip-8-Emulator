@@ -32,6 +32,9 @@ void chip8_init(Chip8 *chip8){
     chip8->delay_timer = 0;
     chip8->sound_timer = 0;
 
+    //Initialise the configurable instuction 0x8xy6
+    chip8->shift_uses_vy = 0;
+
 }
 
 uint16_t chip8_fetch(Chip8 *chip8){
