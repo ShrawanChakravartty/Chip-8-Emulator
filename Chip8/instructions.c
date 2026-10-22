@@ -267,3 +267,58 @@ void chip8_execute_Cxnn(Chip8 *chip8, uint16_t instruction){
     //assign the value to reg x
     chip8->V[x] = random & nn;
 }
+
+void chip8_execute_ex9e(Chip8 *chip8,uint16_t instruction){
+    //Get register number
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //Get the value at x register
+    uint8_t value = chip8->V[x];   
+
+    //check if the corresponding value key is pressed
+    if(value <= 15 && chip8->keyboard[value] == true)      chip8->PC += 2;
+}
+
+void chip8_execute_exa1(Chip8 *chip8,uint16_t instruction){
+    //Get register number
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //Get the value at x register
+    uint8_t value = chip8->V[x];   
+
+    //check if the corresponding value key is pressed
+    if(value <= 15 && chip8->keyboard[value] == false)      chip8->PC += 2;
+}
+
+void chip8_execute_fx07(Chip8 *chip8,uint16_t instruction){
+    //Get the reg no.
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //Get the value of delay timer
+    uint8_t value = chip8->delay_timer;
+
+    //Set the value to vx
+    chip8->V[x] = value;
+}
+
+void chip8_execute_fx15(Chip8 *chip8,uint16_t instruction){
+    //Get the reg no.
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //Get the value of register
+    uint8_t value = chip8->V[x];
+
+    //Set the value to delay timer
+    chip8->delay_timer = value;
+}
+
+void chip8_execute_fx18(Chip8 *chip8,uint16_t instruction){
+    //Get the reg no.
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //Get the value of register
+    uint8_t value = chip8->V[x];
+
+    //Set the value to sound timer
+    chip8->sound_timer = value;
+}

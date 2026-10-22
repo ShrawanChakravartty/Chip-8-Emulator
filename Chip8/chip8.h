@@ -105,4 +105,19 @@ void chip8_execute_Bnnn(Chip8 *chip8, uint16_t instruction);
 //Make the random value assigment instruction
 void chip8_execute_Cxnn(Chip8 *chip8, uint16_t instruction);
 
+//Make the Skip if keyboard key is pressed instruction
+void chip8_execute_ex9e(Chip8 *chip8,uint16_t instruction);
+
+//Make the Skip if keyboard key is not pressed instruction
+void chip8_execute_exa1(Chip8 *chip8,uint16_t instruction);
+
+//Set the delay timer value to reg vx
+void chip8_execute_fx07(Chip8 *chip8,uint16_t instruction);
+
+//Set the reg VX to delay timer value
+void chip8_execute_fx15(Chip8 *chip8,uint16_t instruction);
+
+//Set the reg VX to sound timer value
+void chip8_execute_fx18(Chip8 *chip8,uint16_t instruction);
+
 #endif

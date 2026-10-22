@@ -11,11 +11,14 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
     //Fetch the subtype
     uint8_t subtype = decoded.n;
 
+    //Fetch the last byte
+    uint8_t byte = decoded.nn;
+
     //declare the various cases
     switch(type){
         case 0x0:
-            switch(subtype){
-                case 0xE:
+            switch(byte){
+                case 0xEE:
                     //Handle the jump to address stored in stack
                     chip8_execute_00ee(chip8);
                     break;
@@ -127,6 +130,39 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
         case 0xC:
             //Handle random number assignment
             chip8_execute_Cxnn(chip8, instruction);
+            break;
+
+        case 0xE:
+            switch(byte){
+                case 0x9E:
+                    //Handle skip if key is pressed
+                    chip8_execute_ex9e(chip8, instruction);
+                    break;
+
+                case 0xA1:
+                    //Handle skip if key is not pressed
+                    chip8_execute_exa1(chip8, instruction);
+                    break;
+            }
+            break;
+
+        case 0xF:
+            switch(byte){
+                case 0x07:
+                    //Handle the Assignment of delay timer to vx
+                    chip8_execute_fx07(chip8, instruction);
+                    break;
+
+                case 0x15:
+                    //Handle the assignment of vx to delay timer
+                    chip8_execute_fx15(chip8, instruction);
+                    break;
+
+                case 0x18:
+                    //Handle the assignment of vx to sound timer
+                    chip8_execute_fx18(chip8, instruction);
+                    break;
+            }
             break;
 
         default:
