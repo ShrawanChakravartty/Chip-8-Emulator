@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "chip8.h"
 
 void chip8_execute_6xnn(Chip8 *chip8, uint16_t instruction){
@@ -162,4 +163,107 @@ void chip8_execute_8xyE(Chip8 *chip8, uint16_t instruction){
     //left shift the VX
     chip8->V[add1] = chip8->V[add1] << 1;
 
+}
+
+void chip8_execute_1nnn(Chip8 *chip8, uint16_t instruction){
+    //Get the address to jump
+    uint16_t add = chip8_decode_instruction(instruction).nnn;
+
+    //assign the address to PC
+    chip8->PC = add;
+}
+
+void chip8_execute_2nnn(Chip8 *chip8, uint16_t instruction){
+    //Get the jump address
+    uint16_t add = chip8_decode_instruction(instruction).nnn;
+
+    //Store the current address to stack
+    chip8->stack[chip8->SP] = chip8->PC;
+
+    //Increment the SP
+    chip8->SP++;
+
+    //Assign the address to PC
+    chip8->PC = add;
+}
+
+void chip8_execute_00ee(Chip8 *chip8){
+    //Decrement the SP
+    chip8->SP--;
+    
+    //Assign the value at stack to the PC
+    chip8->PC = chip8->stack[chip8->SP];
+}
+
+void chip8_execute_3xnn(Chip8 *chip8, uint16_t instruction){
+    //Get the decoded instruction
+    Chip8Instruction decoded = chip8_decode_instruction(instruction);
+
+    //Get the register no.
+    uint8_t x = decoded.x;
+
+    //Get the value to compare
+    uint8_t value = decoded.nn;
+
+    //If equal then skip the next instruction
+    if(value == chip8->V[x])    chip8->PC += 2;
+}
+
+void chip8_execute_4xnn(Chip8 *chip8, uint16_t instruction){
+    //Get the decoded instruction
+    Chip8Instruction decoded = chip8_decode_instruction(instruction);
+
+    //Get the register no.
+    uint8_t x = decoded.x;
+
+    //Get the value to compare
+    uint8_t value = decoded.nn;
+
+    //If equal then skip the next instruction
+    if(value != chip8->V[x])    chip8->PC += 2;
+}
+
+void chip8_execute_5xy0(Chip8 *chip8, uint16_t instruction){
+    Chip8Instruction decoded = chip8_decode_instruction(instruction);
+
+    uint8_t x = decoded.x;
+
+    uint8_t y = decoded.y;
+
+    if(chip8->V[x] == chip8->V[y])      chip8->PC += 2;
+}
+
+void chip8_execute_9xy0(Chip8 *chip8, uint16_t instruction){
+    Chip8Instruction decoded = chip8_decode_instruction(instruction);
+
+    uint8_t x = decoded.x;
+
+    uint8_t y = decoded.y;
+
+    if(chip8->V[x] != chip8->V[y])      chip8->PC += 2;
+}
+
+void chip8_execute_Bnnn(Chip8 *chip8, uint16_t instruction){
+    //Get the address 
+    uint16_t add = chip8_decode_instruction(instruction).nnn;
+
+    //Store it to PC with V[0] as offset
+    chip8->PC = add + (uint16_t)chip8->V[0];
+}
+
+void chip8_execute_Cxnn(Chip8 *chip8, uint16_t instruction){
+    //Get a random number
+    uint8_t random = (uint8_t)(rand() % 256);
+
+    //Get the decoded instruction
+    Chip8Instruction decoded = chip8_decode_instruction(instruction);
+
+    //Get the nn
+    uint8_t nn = decoded.nn;
+
+    //Get the reg no.
+    uint8_t x = decoded.x;
+
+    //assign the value to reg x
+    chip8->V[x] = random & nn;
 }

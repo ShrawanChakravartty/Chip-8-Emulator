@@ -35,6 +35,12 @@ void chip8_init(Chip8 *chip8){
     //Initialise the configurable instuction 0x8xy6
     chip8->shift_uses_vy = 0;
 
+    //Initialize the keys to false
+    int totalkeys = sizeof(chip8->keyboard) / sizeof(chip8->keyboard[0]);
+    for(int i = 0; i < totalkeys; i++){
+        chip8->keyboard[i] = false;
+    }
+
 }
 
 uint16_t chip8_fetch(Chip8 *chip8){
@@ -60,4 +66,30 @@ void chip8_step(Chip8 *chip8){
 
     //Execute the fetched instruction
     chip8_execute(chip8, instruction);
+}
+
+Chip8Instruction chip8_decode_instruction(uint16_t instruction){
+    //Initialize the decoded variable
+    Chip8Instruction decoded;
+
+    //Extracting type
+    decoded.type = (instruction >> 12) & 0x0F;
+
+    //Extracting x
+    decoded.x = (instruction >> 8) & 0x0F;
+
+    //Extracting y
+    decoded.y = (instruction >> 4) & 0x00F;
+
+    //Extracting n
+    decoded.n = instruction & 0x000F;
+
+    //Extraxting nn
+    decoded.nn = instruction & 0xFF;
+
+    //Extracting nnn
+    decoded.nnn = instruction & 0x0FFF;
+
+    //Return the extracted info
+    return decoded;
 }

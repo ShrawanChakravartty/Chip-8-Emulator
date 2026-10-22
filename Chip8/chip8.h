@@ -1,6 +1,7 @@
 #ifndef CHIP8_H
 #define CHIP8_H
 #include <stdint.h>
+#include <stdbool.h>
 
 //Initialize the struct
 typedef struct {
@@ -13,6 +14,7 @@ typedef struct {
     uint8_t delay_timer;
     uint8_t sound_timer;
     uint8_t shift_uses_vy;
+    bool keyboard[16];
 } Chip8;
 
 //Group the Instuctions type together
@@ -75,5 +77,32 @@ void chip8_execute_8xy6(Chip8 *chip8, uint16_t instruction);
 
 //Make the left shift instruction
 void chip8_execute_8xyE(Chip8 *chip8, uint16_t instruction);
+
+//Make the jump to address instruction
+void chip8_execute_1nnn(Chip8 *chip8, uint16_t instruction);
+
+//Make the jump to address instruction that saves the prev address to Stack
+void chip8_execute_2nnn(Chip8 *chip8, uint16_t instruction);
+
+//Make the PC return to the address stored in stack
+void chip8_execute_00ee(Chip8 *chip8);
+
+//Make the skip if equal Instruction
+void chip8_execute_3xnn(Chip8 *chip8, uint16_t instruction);
+
+//Make the ship if not equal instruction
+void chip8_execute_4xnn(Chip8 *chip8, uint16_t instruction);
+
+//Make the instruction for register equality check
+void chip8_execute_5xy0(Chip8 *chip8, uint16_t instruction);
+
+//Make the instruction for register not equality check
+void chip8_execute_9xy0(Chip8 *chip8, uint16_t instruction);
+
+//Make the jump with offset instruction
+void chip8_execute_Bnnn(Chip8 *chip8, uint16_t instruction);
+
+//Make the random value assigment instruction
+void chip8_execute_Cxnn(Chip8 *chip8, uint16_t instruction);
 
 #endif

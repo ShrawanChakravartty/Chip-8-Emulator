@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c11
 
 TARGET = chip8
-SOURCES = main.c chip8.c instructions.c decode_execute.c
+SOURCES = main.c chip8.c instructions.c execute.c
 OBJECTS = $(SOURCES:.c=.o)
 
 $(TARGET): $(OBJECTS)
