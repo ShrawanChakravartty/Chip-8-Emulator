@@ -132,6 +132,11 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
             chip8_execute_Cxnn(chip8, instruction);
             break;
 
+        case 0xD:
+            //Handle the sprite drawing 
+            chip8_execute_dxyn(chip8, instruction);
+            break;
+
         case 0xE:
             switch(byte){
                 case 0x9E:
@@ -161,6 +166,16 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
                 case 0x18:
                     //Handle the assignment of vx to sound timer
                     chip8_execute_fx18(chip8, instruction);
+                    break;
+
+                case 0x1E:
+                    //Handle the add to I reg instruction
+                    chip8_execute_fx1e(chip8, instruction);
+                    break;
+
+                case 0x0A:
+                    //Handle if key is pressed and store its index to vx
+                    chip8_execute_fx0a(chip8, instruction);
                     break;
             }
             break;

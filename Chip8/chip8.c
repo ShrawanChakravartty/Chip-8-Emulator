@@ -40,6 +40,16 @@ void chip8_init(Chip8 *chip8){
     for(int i = 0; i < totalkeys; i++){
         chip8->keyboard[i] = false;
     }
+    
+    //Initialize the display values to false
+    int totalpixelrows = sizeof(chip8->display) / sizeof(chip8->display[0]);
+    int totalpixelcol = sizeof(chip8->display[0]) / sizeof(chip8->display[0][0]);
+    for (int i = 0; i < totalpixelrows; i++){
+        for (int j = 0; j < totalpixelcol; j++){
+            chip8->display[i][j] = false;
+        }
+    }
+    
 
 }
 

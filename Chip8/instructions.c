@@ -322,3 +322,76 @@ void chip8_execute_fx18(Chip8 *chip8,uint16_t instruction){
     //Set the value to sound timer
     chip8->sound_timer = value;
 }
+
+void chip8_execute_fx1e(Chip8 *chip8,uint16_t instruction){
+    //Get the reg address
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //Get the value in Vx
+    uint8_t value = chip8->V[x];
+
+    //Add to the value of I reg
+    chip8->I += (uint16_t)value;
+}
+
+void chip8_execute_fx0a(Chip8 *chip8,uint16_t instruction){
+    //Get the reg no
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //Check for a key press
+    bool keypress = false;
+    int i;
+    for(i = 0; i < 16; i++){
+        if(chip8->keyboard[i]){
+            keypress = true;
+            break;
+        }
+    }
+
+    //Condition if keypress and if not
+    if(keypress)    chip8->V[x] = (uint8_t)i;
+    else            chip8->PC -= 2;
+}
+
+void chip8_execute_dxyn(Chip8 *chip8, uint16_t instruction){
+    //Get the decoded instruction
+    Chip8Instruction decoded = chip8_decode_instruction(instruction);
+
+    //Get the X cordinate
+    uint8_t x = chip8->V[decoded.x] % 64;
+
+    //Get the Y coordinate
+    uint8_t y = chip8->V[decoded.y] % 32;
+
+    //Set the VF collion flag to 0
+    chip8->V[0xF] = 0;
+
+    //Get the no of sprites to draw
+    uint8_t n = decoded.n;
+
+    //Draw the sprites
+    for(int i = 0; i < n; i++){
+        //Get the sprite byte from memory
+        uint8_t sprite = chip8->memory[chip8->I + i];
+
+        //Check for out of bounds in Rows
+        if((y + i) > 31)    break;
+
+        for(int j = 7, k = 0; j >= 0; j--, k++){
+            //Get the bit from the sprite byte
+            uint8_t bit = (sprite >> j) & 0x1;
+
+            //Check in out of bounds in columns
+            if((x + k) > 63)    break;
+
+            //Check for collisions
+            if(bit == 1 && chip8->display[y + i][x + k] == true){
+                chip8->display[y + i][x + k] = false;
+                chip8->V[0xF] = 1;   
+            }
+            else if(bit == 1 && chip8->display[y + i][x + k] == false){
+                chip8->display[y + i][x + k] = true;
+            }
+        }
+    }
+}

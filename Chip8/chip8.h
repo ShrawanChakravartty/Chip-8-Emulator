@@ -15,6 +15,7 @@ typedef struct {
     uint8_t sound_timer;
     uint8_t shift_uses_vy;
     bool keyboard[16];
+    bool display[32][64];
 } Chip8;
 
 //Group the Instuctions type together
@@ -119,5 +120,14 @@ void chip8_execute_fx15(Chip8 *chip8,uint16_t instruction);
 
 //Set the reg VX to sound timer value
 void chip8_execute_fx18(Chip8 *chip8,uint16_t instruction);
+
+//Add to the value of the I reg
+void chip8_execute_fx1e(Chip8 *chip8,uint16_t instruction);
+
+//Check for a key press event else wait
+void chip8_execute_fx0a(Chip8 *chip8,uint16_t instruction);
+
+//Invokes the sprite drawing instruction
+void chip8_execute_dxyn(Chip8 *chip8, uint16_t instruction);
 
 #endif
