@@ -22,6 +22,11 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
                     //Handle the jump to address stored in stack
                     chip8_execute_00ee(chip8);
                     break;
+
+                case 0xE0:
+                    //Handle the clearing of screen
+                    chip8_execute_00e0(chip8);
+                    break;
             }
             break;
 
@@ -176,6 +181,26 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
                 case 0x0A:
                     //Handle if key is pressed and store its index to vx
                     chip8_execute_fx0a(chip8, instruction);
+                    break;
+
+                case 0x29:
+                    //Handle Storing of font character address to I register
+                    chip8_execute_fx29(chip8, instruction);
+                    break;
+
+                case 0x33:
+                    //Handles storing of BCD in memory
+                    chip8_execute_fx33(chip8, instruction);
+                    break;
+
+                case 0x55:
+                    //handle the register value storing in memory
+                    chip8_execute_fx55(chip8, instruction);
+                    break;
+
+                case 0x65:
+                    //Handle the storing of values from memory to registers
+                    chip8_execute_fx65(chip8, instruction);
                     break;
             }
             break;

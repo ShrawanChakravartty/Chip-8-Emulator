@@ -395,3 +395,59 @@ void chip8_execute_dxyn(Chip8 *chip8, uint16_t instruction){
         }
     }
 }
+
+void chip8_execute_fx29(Chip8 *chip8, uint16_t instruction){
+    //Get the register number
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //Get the character from the register
+    uint8_t getvalue = chip8->V[x];
+
+    //Assign the value to I
+    chip8->I = 0x050 + (5 * getvalue); 
+}
+
+void chip8_execute_fx33(Chip8 *chip8, uint16_t instruction){
+    //Get the register no.
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //Get the value
+    uint8_t value = chip8->V[x];
+
+    //store the value + I reg in memory
+    for(int i = 2;i >= 0; i--){
+        chip8->memory[chip8->I + i] = value % 10;
+        value /= 10;
+    }
+}
+
+void chip8_execute_fx55(Chip8 *chip8, uint16_t instruction){
+    //Get the register number
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //store the value of V0 to Vx in memory
+    for(int i = 0; i <= x; i++){
+        chip8->memory[chip8->I + i] = chip8->V[i];
+    }
+}
+
+void chip8_execute_fx65(Chip8 *chip8, uint16_t instruction){
+    //Get the register number
+    uint8_t x = chip8_decode_instruction(instruction).x;
+
+    //store the value of memory I to I + x in registers
+    for(int i = 0; i <= x; i++){
+        chip8->V[i] = chip8->memory[chip8->I + i];
+    }
+}
+
+void chip8_execute_00e0(Chip8 *chip8){
+    //Initialize the display values to false
+    int totalpixelrows = sizeof(chip8->display) / sizeof(chip8->display[0]);
+    int totalpixelcol = sizeof(chip8->display[0]) / sizeof(chip8->display[0][0]);
+    for (int i = 0; i < totalpixelrows; i++){
+        for (int j = 0; j < totalpixelcol; j++){
+            chip8->display[i][j] = false;
+        }
+    }
+}

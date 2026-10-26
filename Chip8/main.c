@@ -8,52 +8,33 @@ int main(void){
 
     chip8_init(&chip8);
 
+    if(!chip8_load_rom(&chip8, "PONG")){
+        return 1;
+    }
+    printf("Successfully Loaded ROM into memory\n");
+
     srand(time(NULL));
 
+    for(int i = 0; i < 1001; i++){
+        chip8_step(&chip8);
+    }
+
 
     //Print Program counter again
     printf("PC = 0x%03X\n", (unsigned int)chip8.PC);
-
-    chip8.memory[0x300] = 0xF0;
-    chip8.memory[0x200] = 0xA3;
-    chip8.memory[0x201] = 0x00;
-    chip8.memory[0x202] = 0x61;
-    chip8.memory[0x203] = 0x0A;
-    chip8.memory[0x204] = 0x62;
-    chip8.memory[0x205] = 0x05;
-    chip8.memory[0x206] = 0xD1;
-    chip8.memory[0x207] = 0x21;
-    chip8.memory[0x208] = 0xD1;
-    chip8.memory[0x209] = 0x21;
-
     
-    chip8_step(&chip8);
-    chip8_step(&chip8);
-    chip8_step(&chip8);
-    chip8_step(&chip8);
+    
 
     //Print Program counter again
     printf("PC = 0x%03X\n", (unsigned int)chip8.PC);
 
-    for(int i = 0; i < 32; i++){
-        for(int j = 0; j < 64 ; j++){
-            if(chip8.display[i][j])     printf("1");
-            else                        printf("0");
-        }
-        printf("\n");
-    }
-    printf("V[F] = %u\n", (unsigned int)chip8.V[0xF]);
-    chip8_step(&chip8);
+    printf("SP = %u\n",chip8.SP);
 
-    for(int i = 0; i < 32; i++){
-        for(int j = 0; j < 64 ; j++){
-            if(chip8.display[i][j])     printf("1");
-            else                        printf("0");
-        }
-        printf("\n");
-    }
-    printf("V[F] = %u\n", (unsigned int)chip8.V[0xF]);
+    printf("I = 0x%03X\n",chip8.I);
 
+    for(int i = 512; i < 800; i++ ){
+        printf("Memory[0x%03X] = 0x%02X\n", i , chip8.memory[i]);
+    }
 
     return 0;
 }

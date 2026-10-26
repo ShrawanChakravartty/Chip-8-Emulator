@@ -130,4 +130,23 @@ void chip8_execute_fx0a(Chip8 *chip8,uint16_t instruction);
 //Invokes the sprite drawing instruction
 void chip8_execute_dxyn(Chip8 *chip8, uint16_t instruction);
 
+//instruction to get the font character address from the memory
+void chip8_execute_fx29(Chip8 *chip8, uint16_t instruction); 
+
+//instruction to store BCD
+void chip8_execute_fx33(Chip8 *chip8, uint16_t instruction); 
+
+//Instruction to store value of register in memory
+void chip8_execute_fx55(Chip8 *chip8, uint16_t instruction); 
+
+//Load register value from memory
+void chip8_execute_fx65(Chip8 *chip8, uint16_t instruction); 
+
+//instruction to clear the screen
+void chip8_execute_00e0(Chip8 *chip8); 
+
+//Loads the chip8 rom in memory
+bool chip8_load_rom(Chip8 *chip8, const char *filename);
+
+
 #endif
