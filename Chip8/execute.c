@@ -27,6 +27,9 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
                     //Handle the clearing of screen
                     chip8_execute_00e0(chip8);
                     break;
+
+                default:
+                    //For legacy op-code 0NNN
             }
             break;
 
@@ -113,6 +116,11 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
                     //Handle the bitwise left shift operation
                     chip8_execute_8xyE(chip8, instruction);
                     break;
+
+                default:
+                    //Say that this type is instruction is invalid or not yet implemented
+                    printf("Unknown Instruction 0x%04X\n", (unsigned int)instruction);
+                    break;
             }
             break;
         
@@ -152,6 +160,11 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
                 case 0xA1:
                     //Handle skip if key is not pressed
                     chip8_execute_exa1(chip8, instruction);
+                    break;
+
+                default:
+                    //Say that this type is instruction is invalid or not yet implemented
+                    printf("Unknown Instruction 0x%04X\n", (unsigned int)instruction);
                     break;
             }
             break;
@@ -201,6 +214,11 @@ void chip8_execute(Chip8 *chip8, uint16_t instruction){
                 case 0x65:
                     //Handle the storing of values from memory to registers
                     chip8_execute_fx65(chip8, instruction);
+                    break;
+
+                default:
+                    //Say that this type is instruction is invalid or not yet implemented
+                    printf("Unknown Instruction 0x%04X\n", (unsigned int)instruction);
                     break;
             }
             break;

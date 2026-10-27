@@ -3,3 +3,5 @@ chip8.o
 main.o
 instructions.o
 execute.o
+graphics.o
+ROMS/

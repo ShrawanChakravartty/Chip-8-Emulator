@@ -357,11 +357,16 @@ void chip8_execute_dxyn(Chip8 *chip8, uint16_t instruction){
     //Get the decoded instruction
     Chip8Instruction decoded = chip8_decode_instruction(instruction);
 
+    //Height and width of the display matrix
+    int height = (sizeof(chip8->display)/sizeof(chip8->display[0]));
+    int width = (sizeof(chip8->display[0])/sizeof(chip8->display[0][0]));
+
+
     //Get the X cordinate
-    uint8_t x = chip8->V[decoded.x] % 64;
+    uint8_t x = chip8->V[decoded.x] % width;
 
     //Get the Y coordinate
-    uint8_t y = chip8->V[decoded.y] % 32;
+    uint8_t y = chip8->V[decoded.y] % height;
 
     //Set the VF collion flag to 0
     chip8->V[0xF] = 0;
@@ -375,14 +380,14 @@ void chip8_execute_dxyn(Chip8 *chip8, uint16_t instruction){
         uint8_t sprite = chip8->memory[chip8->I + i];
 
         //Check for out of bounds in Rows
-        if((y + i) > 31)    break;
+        if((y + i) >= height)    break;
 
         for(int j = 7, k = 0; j >= 0; j--, k++){
             //Get the bit from the sprite byte
             uint8_t bit = (sprite >> j) & 0x1;
 
             //Check in out of bounds in columns
-            if((x + k) > 63)    break;
+            if((x + k) >= width)    break;
 
             //Check for collisions
             if(bit == 1 && chip8->display[y + i][x + k] == true){
