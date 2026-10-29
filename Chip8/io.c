@@ -1,6 +1,8 @@
-#include "graphics.h"
+#include "io.h"
+#include <string.h>
 #define TITLE "Chip - 8 Emulator"
 #define scale 10
+#include <stdatomic.h>
 
 bool graphics_init(Graphics *graphics, Chip8 *chip8){
     //Height and width of the window 
@@ -94,3 +96,67 @@ void graphics_render(Graphics *graphics, Chip8 *chip8){
     SDL_RenderPresent(graphics->renderer);
 }
 
+void audio_init(Audio *audio, Chip8 *chip8){
+    audio->chip8 = chip8;
+
+    //descibe the audiospec
+    SDL_AudioSpec spec = {
+        .freq = 44100,
+        .channels = 1,
+        .format = AUDIO_F32SYS,
+        .samples = 128, 
+        .callback = audio_callback,
+        .userdata = audio
+    };
+    //For reporitng back
+    SDL_AudioSpec obtained;
+
+    //Open the audio device with the specific configuration
+    audio->audio_device = SDL_OpenAudioDevice(NULL, 0, &spec, &obtained, 0);
+
+    //check for error
+    if(!audio->audio_device){
+        printf("%s\n", SDL_GetError());
+        return;
+    }
+
+    //Unpause the audio
+    SDL_PauseAudioDevice(audio->audio_device, 0);
+}
+
+void audio_callback(void *userdata, Uint8 *stream, int len){
+    //Setting every byte to zero
+    memset(stream, 0, len);
+
+    //Get access to the sound timer
+    Audio *audio = (Audio *)userdata;
+    
+    //Condition to play sound
+    if(audio->chip8->sound_timer > 0){
+
+        float* buffer = (float*)stream;
+
+        int sample_count = len / sizeof(float);
+
+        for(int i = 0; i < sample_count; i++){
+            audio->phase = audio->phase + (440.0f / 44100.0f);
+            if(audio->phase >= 1.0f)     audio->phase -= 1.0f;
+
+            if(audio->phase < 0.5f){
+                buffer[i] = 0.25f;
+            }
+            else{
+                buffer[i] = -0.25f;
+            }
+        }
+    }
+    else    memset(stream, 0, len);
+}
+
+void audio_cleanup(Audio *audio){
+    //Closes the audiodevice
+    if(audio->audio_device != 0)     SDL_CloseAudioDevice(audio->audio_device);
+    
+    //Sets the audio device to 0
+    audio->audio_device = 0;
+}
