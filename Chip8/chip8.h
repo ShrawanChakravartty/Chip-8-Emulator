@@ -16,6 +16,8 @@ typedef struct {
     uint8_t shift_uses_vy;
     bool keyboard[16];
     bool display[32][64];
+    bool reset_vf;
+    bool load_store_increment_i;
 } Chip8;
 
 //Group the Instuctions type together

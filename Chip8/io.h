@@ -8,6 +8,7 @@
 typedef struct{
     SDL_Window* window;
     SDL_Renderer* renderer;
+    bool boxBorder;
 }Graphics;
 
 //Initialize the audio device struct

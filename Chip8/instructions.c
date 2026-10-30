@@ -103,6 +103,9 @@ void chip8_execute_8xy1(Chip8 *chip8, uint16_t instruction){
     //Find address 2
     uint8_t add2 = chip8_decode_instruction(instruction).y;
 
+    //Check the reset flag
+    if(chip8->reset_vf)         chip8->V[0xF] = 0;
+
     //OR operation of the two registers
     chip8->V[add1] = chip8->V[add1] | chip8->V[add2];
 }
@@ -113,6 +116,9 @@ void chip8_execute_8xy2(Chip8 *chip8, uint16_t instruction){
 
     //Find address 2
     uint8_t add2 = chip8_decode_instruction(instruction).y;
+    
+    //Check the reset flag
+    if(chip8->reset_vf)         chip8->V[0xF] = 0;
 
     //AND operation of the two registers
     chip8->V[add1] = chip8->V[add1] & chip8->V[add2];
@@ -124,6 +130,9 @@ void chip8_execute_8xy3(Chip8 *chip8, uint16_t instruction){
 
     //Find address 2
     uint8_t add2 = chip8_decode_instruction(instruction).y;
+    
+    //Check the reset flag
+    if(chip8->reset_vf)         chip8->V[0xF] = 0;
 
     //XOR operation of the two registers
     chip8->V[add1] = chip8->V[add1] ^ chip8->V[add2];
@@ -434,6 +443,9 @@ void chip8_execute_fx55(Chip8 *chip8, uint16_t instruction){
     for(int i = 0; i <= x; i++){
         chip8->memory[chip8->I + i] = chip8->V[i];
     }
+
+    //Condition for quirk
+    if(chip8->load_store_increment_i)       chip8->I += (uint16_t)(x + 1);
 }
 
 void chip8_execute_fx65(Chip8 *chip8, uint16_t instruction){
@@ -444,6 +456,9 @@ void chip8_execute_fx65(Chip8 *chip8, uint16_t instruction){
     for(int i = 0; i <= x; i++){
         chip8->V[i] = chip8->memory[chip8->I + i];
     }
+    
+    //Condition for quirk
+    if(chip8->load_store_increment_i)       chip8->I += (uint16_t)(x + 1);
 }
 
 void chip8_execute_00e0(Chip8 *chip8){

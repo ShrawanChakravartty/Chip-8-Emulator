@@ -11,15 +11,23 @@ int main(int argc, char* argv[]){
         return 1;
     }
 
+    //Starts the random function
+    srand(time(NULL));
+
+    //initiate chip8 struct
     Chip8 chip8;
 
+    //Userchoice - .boxBorder - True(Each square will have a blank border)
     Graphics graphics = {
         .window = NULL,
-        .renderer = NULL
+        .renderer = NULL,
+        .boxBorder = false
     };
 
+    //Initiate audio struct
     Audio audio = {0};
 
+    //Initialize the Chip8 variables
     chip8_init(&chip8);
 
     //Initalize the sdl video and audio
@@ -45,9 +53,6 @@ int main(int argc, char* argv[]){
 
     //Initialize the sound
     audio_init(&audio, &chip8);
-
-    //Starts the random function
-    srand(time(NULL));
 
     //Makes an event handler for sdl
     SDL_Event sdl_event;
@@ -143,6 +148,11 @@ int main(int argc, char* argv[]){
                             break; 
                         case SDLK_v:
                             chip8.keyboard[0xF] = true;
+                            break;
+                        case SDLK_ESCAPE:
+                            //Quit 
+                            printf("Quiting ...\n");
+                            running = false;
                             break;
                     }
                     break;

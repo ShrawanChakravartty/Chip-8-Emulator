@@ -2,7 +2,7 @@
 #include <string.h>
 #define TITLE "Chip - 8 Emulator"
 #define scale 10
-#include <stdatomic.h>
+#include <stdio.h>
 
 bool graphics_init(Graphics *graphics, Chip8 *chip8){
     //Height and width of the window 
@@ -89,6 +89,20 @@ void graphics_render(Graphics *graphics, Chip8 *chip8){
                     printf("%s\n", SDL_GetError());
                     return;
                 }
+
+                //User-choice 
+                if(graphics->boxBorder){
+                    //Change the draw color to Black and check for errors
+                    if(SDL_SetRenderDrawColor(graphics->renderer, 0, 0, 0, SDL_ALPHA_OPAQUE)){
+                        printf("%s\n", SDL_GetError());
+                        return;
+                    }
+                    //Fill the circumference with black
+                    if(SDL_RenderDrawRect(graphics->renderer, &rect)){
+                        printf("%s\n", SDL_GetError());
+                        return;
+                    }
+                } 
             }
         }
     }
@@ -99,9 +113,9 @@ void graphics_render(Graphics *graphics, Chip8 *chip8){
 void audio_init(Audio *audio, Chip8 *chip8){
     audio->chip8 = chip8;
 
-    //descibe the audiospec
+    //descibe the audiospec(freq - 44100 for blunt and 48000 for sharp sound)
     SDL_AudioSpec spec = {
-        .freq = 44100,
+        .freq = 48000,
         .channels = 1,
         .format = AUDIO_F32SYS,
         .samples = 128, 

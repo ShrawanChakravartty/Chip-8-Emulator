@@ -68,14 +68,24 @@ void chip8_init(Chip8 *chip8){
     chip8->delay_timer = 0;
     chip8->sound_timer = 0;
 
-    //Initialise the configurable instuction 0x8xy6
-    chip8->shift_uses_vy = 0;
+    //QUIRKS(1,true) means on and (0, false) means off
+    {
+        //Initialise the configurable instuction 0x8xy6
+        chip8->shift_uses_vy = 0;
+
+        //Reset VF before AND , OR , XOR
+        chip8->reset_vf = false;
+
+        //Increase the I by x + 1
+        chip8->load_store_increment_i = false;
+    }
 
     //Initialize the keys to false
     int totalkeys = sizeof(chip8->keyboard) / sizeof(chip8->keyboard[0]);
     for(int i = 0; i < totalkeys; i++){
         chip8->keyboard[i] = false;
     }
+
     
     //Initialize the display values to false
     int totalpixelrows = sizeof(chip8->display) / sizeof(chip8->display[0]);
